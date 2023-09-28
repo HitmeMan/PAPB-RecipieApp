@@ -60,6 +60,11 @@ flutter:
   uses-material-design: true
   assets: 
     - image/lake.jpg
+    - image/ayam.jpeg
+    - image/sayurbox.jpg
+    - image/steak.jpg
+    - image/foods.jpg
+    - image/Drinks.jpg
     - assets/icons/
 
 

@@ -18,6 +18,7 @@ class RecipeDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Detail Resep'),
+        backgroundColor: Color.fromARGB(255, 214, 153, 40),
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -25,19 +26,19 @@ class RecipeDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Image.asset(
-              'image/lake.jpg',
+              'image/sayurbox.jpg',
               width: MediaQuery.of(context).size.width,
               height: 200,
               fit: BoxFit.cover,
             ),
             SizedBox(height: 16.0),
 
-            // Nama makanan
             Text(
               recipeName,
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.black, // Match your color
               ),
             ),
             SizedBox(height: 8.0),
@@ -47,16 +48,17 @@ class RecipeDetailPage extends StatelessWidget {
               'Lama Pengerjaan: $cookTime',
               style: TextStyle(
                 fontSize: 16.0,
+                color: Colors.black,
               ),
             ),
             SizedBox(height: 16.0),
 
-            // Bahan-bahan
             Text(
               'Bahan-Bahan:',
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.black, // Match your color
               ),
             ),
             SizedBox(height: 8.0),
@@ -65,7 +67,12 @@ class RecipeDetailPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: ingredients.map((ingredient) {
-                return Text('- $ingredient');
+                return Text(
+                  '- $ingredient',
+                  style: TextStyle(
+                    color: Colors.black, // Match your color
+                  ),
+                );
               }).toList(),
             ),
             SizedBox(height: 16.0),
@@ -76,6 +83,7 @@ class RecipeDetailPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.black, // Match your color
               ),
             ),
             SizedBox(height: 8.0),
@@ -86,7 +94,12 @@ class RecipeDetailPage extends StatelessWidget {
               children: steps.asMap().entries.map((entry) {
                 int index = entry.key + 1;
                 String step = entry.value;
-                return Text('$index. $step');
+                return Text(
+                  '$index. $step',
+                  style: TextStyle(
+                    color: Colors.black, // Match your color
+                  ),
+                );
               }).toList(),
             ),
           ],

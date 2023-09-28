@@ -9,6 +9,32 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 214, 153, 40),
+              ),
+              child: Text(
+                'ReciAPP',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              title: Text('Menu 1'),
+              onTap: () {
+                // Tambahkan logika ketika menu 1 dipilih
+              },
+            ),
+            // Tambahkan item-menu lainnya sesuai kebutuhan Anda
+          ],
+        ),
+      ),
       backgroundColor: Color(0xff392A27),
       body: ListView(
         children: <Widget>[
@@ -29,32 +55,48 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 15),
-              Container(
+              SizedBox(
                 height: 150,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: <Widget>[
                     // Item 1
                     Container(
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          image: DecorationImage(
+                              image: AssetImage('image/foods.jpg'),
+                              fit: BoxFit.cover)),
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.blue,
                       child: Center(
-                        child: Text(
-                          'Food',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'FOOD',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white),
+                            )),
                       ),
                     ),
 
                     // Item 2
                     Container(
+                      decoration: BoxDecoration(
+                          color: Colors.green,
+                          image: DecorationImage(
+                              image: AssetImage('image/Drinks.jpg'),
+                              fit: BoxFit.cover)),
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.green,
                       child: Center(
-                        child: Text(
-                          'Drink',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'Drink',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white),
+                            )),
                       ),
                     ),
                   ],
@@ -67,15 +109,24 @@ class HomePage extends StatelessWidget {
                     height: 150,
                     margin: EdgeInsets.all(20),
                     decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('image/sayurbox.jpg'),
+                          fit: BoxFit.cover),
                       color: Colors.amber,
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Center(
-                      child: Text('FOOD#1'),
+                      child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'FOOD#1',
+                            style: TextStyle(fontSize: 25, color: Colors.white),
+                          )),
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(),
                       ElevatedButton(
@@ -98,23 +149,81 @@ class HomePage extends StatelessWidget {
                     height: 150,
                     margin: EdgeInsets.all(20),
                     decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('image/steak.jpg'),
+                          fit: BoxFit.cover),
                       color: Colors.amber,
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Center(
-                      child: Text('FOOD#2'),
+                      child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'FOOD#2',
+                            style: TextStyle(fontSize: 25, color: Colors.white),
+                          )),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => RecipeDetailPage(
+                              recipeName: 'Food#2',
+                              cookTime: '60 Menit',
+                              ingredients: ['bahan1', 'bahan2', 'bahan3'],
+                              steps: ['step1', 'step2', 'step3'],
+                            ),
+                          ));
+                        },
+                        style: ElevatedButton.styleFrom(),
+                        child: Text('Lihat Detail'),
+                      ),
+                    ],
                   ),
                   Container(
                     height: 150,
                     margin: EdgeInsets.all(20),
                     decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('image/ayam.jpeg'),
+                          fit: BoxFit.cover),
                       color: Colors.amber,
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     child: Center(
-                      child: Text('FOOD#3'),
+                      child: Container(
+                          color: Colors.black.withOpacity(0.5),
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'FOOD#3',
+                            style: TextStyle(fontSize: 25, color: Colors.white),
+                          )),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => RecipeDetailPage(
+                              recipeName: 'Food#3',
+                              cookTime: '60 Menit',
+                              ingredients: ['bahan1', 'bahan2', 'bahan3'],
+                              steps: ['step1', 'step2', 'step3'],
+                            ),
+                          ));
+                        },
+                        style: ElevatedButton.styleFrom(),
+                        child: Text('Lihat Detail'),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -159,16 +268,14 @@ class HomePage extends StatelessWidget {
       centerTitle: true,
       backgroundColor: Color.fromARGB(255, 214, 153, 40),
       elevation: 0.0,
-      leading: Container(
-        // alignment: Alignment.center,
-        margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Color.fromARGB(255, 223, 178, 82),
-            borderRadius: BorderRadius.circular(10)),
-        child: SvgPicture.asset(
-          'assets/icons/Menu.svg',
-          // width: 20,
-          // height: 20,
+      leading: Builder(
+        builder: (context) => IconButton(
+          icon: SvgPicture.asset(
+            'assets/icons/Menu.svg',
+          ),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
         ),
       ),
     );
