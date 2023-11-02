@@ -22,8 +22,7 @@ class RecipeDetailPage extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             Image.asset(
               'image/sayurbox.jpg',
@@ -45,7 +44,7 @@ class RecipeDetailPage extends StatelessWidget {
 
             // Lama pengerjaan
             Text(
-              'Lama Pengerjaan: $cookTime',
+              '$cookTime',
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black,

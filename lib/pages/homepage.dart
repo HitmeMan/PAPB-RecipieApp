@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:testflutter_application_1/pages/login/login.dart';
 import 'package:testflutter_application_1/pages/recipe/recipie_Detail.dart';
+import 'package:testflutter_application_1/pages/recipe/recipie_list.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -26,12 +29,21 @@ class HomePage extends StatelessWidget {
               ),
             ),
             ListTile(
-              title: Text('Menu 1'),
+              title: Text('List'),
               onTap: () {
-                // Tambahkan logika ketika menu 1 dipilih
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => recipieList()));
               },
             ),
-            // Tambahkan item-menu lainnya sesuai kebutuhan Anda
+            ListTile(
+              title: Text('Log Out'),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+                FirebaseAuth.instance.signOut();
+              },
+            ),
           ],
         ),
       ),
@@ -105,125 +117,104 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 15),
               Column(
                 children: <Widget>[
-                  Container(
-                    height: 150,
-                    margin: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('image/sayurbox.jpg'),
-                          fit: BoxFit.cover),
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Center(
-                      child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'FOOD#1',
-                            style: TextStyle(fontSize: 25, color: Colors.white),
-                          )),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => RecipeDetailPage(
-                              recipeName: 'Food#1',
-                              cookTime: '60 Menit',
-                              ingredients: ['bahan1', 'bahan2', 'bahan3'],
-                              steps: ['step1', 'step2', 'step3'],
-                            ),
-                          ));
-                        },
-                        style: ElevatedButton.styleFrom(),
-                        child: Text('Lihat Detail'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RecipeDetailPage(
+                          recipeName: 'Food#1',
+                          cookTime: '60 Menit',
+                          ingredients: ['bahan1', 'bahan2', 'bahan3'],
+                          steps: ['step1', 'step2', 'step3'],
+                        ),
+                      ));
+                    },
+                    child: Container(
+                      height: 150,
+                      margin: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('image/sayurbox.jpg'),
+                            fit: BoxFit.cover),
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ],
-                  ),
-                  Container(
-                    height: 150,
-                    margin: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('image/steak.jpg'),
-                          fit: BoxFit.cover),
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Center(
-                      child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'FOOD#2',
-                            style: TextStyle(fontSize: 25, color: Colors.white),
-                          )),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => RecipeDetailPage(
-                              recipeName: 'Food#2',
-                              cookTime: '60 Menit',
-                              ingredients: ['bahan1', 'bahan2', 'bahan3'],
-                              steps: ['step1', 'step2', 'step3'],
-                            ),
-                          ));
-                        },
-                        style: ElevatedButton.styleFrom(),
-                        child: Text('Lihat Detail'),
+                      child: Center(
+                        child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'FOOD#1',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white),
+                            )),
                       ),
-                    ],
-                  ),
-                  Container(
-                    height: 150,
-                    margin: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('image/ayam.jpeg'),
-                          fit: BoxFit.cover),
-                      color: Colors.amber,
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Center(
-                      child: Container(
-                          color: Colors.black.withOpacity(0.5),
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'FOOD#3',
-                            style: TextStyle(fontSize: 25, color: Colors.white),
-                          )),
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => RecipeDetailPage(
-                              recipeName: 'Food#3',
-                              cookTime: '60 Menit',
-                              ingredients: ['bahan1', 'bahan2', 'bahan3'],
-                              steps: ['step1', 'step2', 'step3'],
-                            ),
-                          ));
-                        },
-                        style: ElevatedButton.styleFrom(),
-                        child: Text('Lihat Detail'),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RecipeDetailPage(
+                          recipeName: 'Food#2',
+                          cookTime: '60 Menit',
+                          ingredients: ['bahan1', 'bahan2', 'bahan3'],
+                          steps: ['step1', 'step2', 'step3'],
+                        ),
+                      ));
+                    },
+                    child: Container(
+                      height: 150,
+                      margin: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('image/steak.jpg'),
+                            fit: BoxFit.cover),
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ],
+                      child: Center(
+                        child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'FOOD#2',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white),
+                            )),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RecipeDetailPage(
+                          recipeName: 'Food#3',
+                          cookTime: '60 Menit',
+                          ingredients: ['bahan1', 'bahan2', 'bahan3'],
+                          steps: ['step1', 'step2', 'step3'],
+                        ),
+                      ));
+                    },
+                    child: Container(
+                      height: 150,
+                      margin: EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage('image/ayam.jpeg'),
+                            fit: BoxFit.cover),
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Center(
+                        child: Container(
+                            color: Colors.black.withOpacity(0.5),
+                            padding: EdgeInsets.all(10),
+                            child: Text(
+                              'FOOD#3',
+                              style:
+                                  TextStyle(fontSize: 25, color: Colors.white),
+                            )),
+                      ),
+                    ),
                   ),
                 ],
               ),

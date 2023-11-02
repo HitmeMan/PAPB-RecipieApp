@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 // import 'package:testflutter_application_1/pages/homepage.dart';
 import 'package:testflutter_application_1/pages/login/login.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }
 
 class MyApp extends StatelessWidget {
