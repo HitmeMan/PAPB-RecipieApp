@@ -1,9 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:carousel_slider/carousel_options.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:testflutter_application_1/pages/login/login.dart';
 import 'package:testflutter_application_1/pages/recipe/recipie_Detail.dart';
 import 'package:testflutter_application_1/pages/recipe/recipie_list.dart';
+import 'package:testflutter_application_1/pages/model/recipe.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -11,46 +15,77 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color.fromARGB(255, 214, 153, 40),
+        appBar: appBar(),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 214, 153, 40),
+                ),
+                child: Text(
+                  'ReciAPP',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
               ),
+              ListTile(
+                title: Text('List'),
+                onTap: () {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => RecipieList()));
+                },
+              ),
+              ListTile(
+                title: Text('Log Out'),
+                onTap: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                  FirebaseAuth.instance.signOut();
+                },
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Color(0xff392A27),
+        body: ListView(children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CarouselSlider(
+              options: CarouselOptions(
+                height: 300.0,
+                enlargeCenterPage: true,
+                autoPlay: true,
+                aspectRatio: 16 / 9,
+                autoPlayCurve: Curves.fastOutSlowIn,
+                enableInfiniteScroll: true,
+                autoPlayAnimationDuration: Duration(milliseconds: 800),
+                viewportFraction: 0.9,
+              ),
+              items: [
+                Image.asset('image/culinary.jpeg', fit: BoxFit.cover),
+                Image.asset('image/foods.jpg', fit: BoxFit.cover),
+                Image.asset('image/ayam.jpeg', fit: BoxFit.cover),
+              ],
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
-                'ReciAPP',
+                'Discover Culinary Delights\nFrom Around the World',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            ListTile(
-              title: Text('List'),
-              onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => recipieList()));
-              },
-            ),
-            ListTile(
-              title: Text('Log Out'),
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                );
-                FirebaseAuth.instance.signOut();
-              },
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: Color(0xff392A27),
-      body: ListView(
-        children: <Widget>[
-          searchfield(),
+          ),
           SizedBox(height: 40),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +93,7 @@ class HomePage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(),
                 child: Text(
-                  'Category',
+                  'Recommended',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -69,160 +104,184 @@ class HomePage extends StatelessWidget {
               SizedBox(height: 15),
               SizedBox(
                 height: 150,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    // Item 1
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.blue,
-                          image: DecorationImage(
-                              image: AssetImage('image/foods.jpg'),
-                              fit: BoxFit.cover)),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Container(
-                            color: Colors.black.withOpacity(0.5),
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'FOOD',
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            )),
-                      ),
-                    ),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('foodlist')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
 
-                    // Item 2
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Colors.green,
-                          image: DecorationImage(
-                              image: AssetImage('image/Drinks.jpg'),
-                              fit: BoxFit.cover)),
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: Container(
-                            color: Colors.black.withOpacity(0.5),
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'Drink',
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            )),
-                      ),
-                    ),
-                  ],
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+
+                    List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+
+                    // Convert QueryDocumentSnapshot to List<Food>
+                    List<Food> foods = documents.map((doc) {
+                      return Food.fromMap(doc.data() as Map<String, dynamic>);
+                    }).toList();
+
+                    return ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: foods.length,
+                      itemBuilder: (context, index) {
+                        var food = foods[index];
+
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => RecipeDetailPage(
+                                recipeName: food.foodName,
+                                cookTime: food.time.toString(),
+                                imageUrl: food.imageUrl,
+                                ingredients: food.ingredients,
+                                steps: food.steps,
+                              ),
+                            ));
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              image: DecorationImage(
+                                image: NetworkImage(food.imageUrl),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Center(
+                              child: Container(
+                                color: Colors.black.withOpacity(0.5),
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  food.foodName,
+                                  style: TextStyle(
+                                      fontSize: 25, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
-              ),
-              SizedBox(height: 15),
-              Column(
-                children: <Widget>[
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RecipeDetailPage(
-                          recipeName: 'Food#1',
-                          cookTime: '60 Menit',
-                          ingredients: ['bahan1', 'bahan2', 'bahan3'],
-                          steps: ['step1', 'step2', 'step3'],
-                        ),
-                      ));
-                    },
-                    child: Container(
-                      height: 150,
-                      margin: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('image/sayurbox.jpg'),
-                            fit: BoxFit.cover),
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Center(
-                        child: Container(
-                            color: Colors.black.withOpacity(0.5),
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'FOOD#1',
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            )),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RecipeDetailPage(
-                          recipeName: 'Food#2',
-                          cookTime: '60 Menit',
-                          ingredients: ['bahan1', 'bahan2', 'bahan3'],
-                          steps: ['step1', 'step2', 'step3'],
-                        ),
-                      ));
-                    },
-                    child: Container(
-                      height: 150,
-                      margin: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('image/steak.jpg'),
-                            fit: BoxFit.cover),
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Center(
-                        child: Container(
-                            color: Colors.black.withOpacity(0.5),
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'FOOD#2',
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            )),
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RecipeDetailPage(
-                          recipeName: 'Food#3',
-                          cookTime: '60 Menit',
-                          ingredients: ['bahan1', 'bahan2', 'bahan3'],
-                          steps: ['step1', 'step2', 'step3'],
-                        ),
-                      ));
-                    },
-                    child: Container(
-                      height: 150,
-                      margin: EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage('image/ayam.jpeg'),
-                            fit: BoxFit.cover),
-                        color: Colors.amber,
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Center(
-                        child: Container(
-                            color: Colors.black.withOpacity(0.5),
-                            padding: EdgeInsets.all(10),
-                            child: Text(
-                              'FOOD#3',
-                              style:
-                                  TextStyle(fontSize: 25, color: Colors.white),
-                            )),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ],
           ),
-        ],
-      ),
-    );
+          SizedBox(height: 15),
+          InkWell(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => RecipieList()),
+              );
+            },
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 80,
+                color: Colors.orange, // Sesuaikan dengan warna yang diinginkan
+                child: Center(
+                  child: Text(
+                    'Menu List',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )),
+          ),
+          SizedBox(height: 15),
+          // TODO: isilist favorite disini
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(),
+                child: Text(
+                  'Favorite Recipes',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(height: 15),
+              SizedBox(
+                height: 150,
+                child: StreamBuilder<QuerySnapshot>(
+                  // Ganti collection dan query sesuai dengan kebutuhan Anda
+                  stream: FirebaseFirestore.instance
+                      .collection('foodlist')
+                      .where('isFavorite', isEqualTo: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    }
+
+                    List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+
+                    // Convert QueryDocumentSnapshot to List<Food>
+                    List<Food> favoriteFoods = documents.map((doc) {
+                      return Food.fromMap(doc.data() as Map<String, dynamic>);
+                    }).toList();
+
+                    return ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: favoriteFoods.length,
+                      itemBuilder: (context, index) {
+                        var favoriteFood = favoriteFoods[index];
+
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => RecipeDetailPage(
+                                recipeName: favoriteFood.foodName,
+                                cookTime: favoriteFood.time.toString(),
+                                imageUrl: favoriteFood.imageUrl,
+                                ingredients: favoriteFood.ingredients,
+                                steps: favoriteFood.steps,
+                              ),
+                            ));
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              image: DecorationImage(
+                                image: NetworkImage(favoriteFood.imageUrl),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Center(
+                              child: Container(
+                                color: Colors.black.withOpacity(0.5),
+                                padding: EdgeInsets.all(10),
+                                child: Text(
+                                  favoriteFood.foodName,
+                                  style: TextStyle(
+                                      fontSize: 25, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
+        ]));
   }
 
   Container searchfield() {

@@ -113,10 +113,6 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 child: Text('Register'),
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('test'),
-              ),
             ],
           ),
         ),

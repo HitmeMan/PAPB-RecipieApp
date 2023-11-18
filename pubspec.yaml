@@ -38,6 +38,8 @@ dependencies:
   flutter_svg: ^2.0.7
   firebase_core: ^2.17.0
   firebase_auth: ^4.11.0
+  cloud_firestore: ^4.12.2
+  carousel_slider: ^4.2.1
 
 
 dev_dependencies:
@@ -61,8 +63,9 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  assets: 
+  assets:
     - image/lake.jpg
+    - image/culinary.jpeg
     - image/ayam.jpeg
     - image/sayurbox.jpg
     - image/steak.jpg

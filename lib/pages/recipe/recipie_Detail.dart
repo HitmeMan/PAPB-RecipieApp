@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class RecipeDetailPage extends StatelessWidget {
   final String recipeName;
   final String cookTime;
+  final String imageUrl;
   final List<String> ingredients;
   final List<String> steps;
 
@@ -11,6 +12,7 @@ class RecipeDetailPage extends StatelessWidget {
     required this.cookTime,
     required this.ingredients,
     required this.steps,
+    required this.imageUrl,
   });
 
   @override
@@ -24,8 +26,8 @@ class RecipeDetailPage extends StatelessWidget {
         padding: EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            Image.asset(
-              'image/sayurbox.jpg',
+            Image.network(
+              imageUrl,
               width: MediaQuery.of(context).size.width,
               height: 200,
               fit: BoxFit.cover,
@@ -37,14 +39,14 @@ class RecipeDetailPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Match your color
+                color: Colors.black, // Sesuaikan warna Anda
               ),
             ),
             SizedBox(height: 8.0),
 
             // Lama pengerjaan
             Text(
-              '$cookTime',
+              '$cookTime menit',
               style: TextStyle(
                 fontSize: 16.0,
                 color: Colors.black,
@@ -52,12 +54,17 @@ class RecipeDetailPage extends StatelessWidget {
             ),
             SizedBox(height: 16.0),
 
-            Text(
-              'Bahan-Bahan:',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black, // Match your color
+            // Bahan-Bahan
+            Container(
+              padding: EdgeInsets.all(8.0),
+              color: Colors.grey[300], // Warna latar belakang untuk bahan
+              child: Text(
+                'Bahan-Bahan:',
+                style: TextStyle(
+                  fontSize: 20.0, // Teks lebih besar
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // Sesuaikan warna Anda
+                ),
               ),
             ),
             SizedBox(height: 8.0),
@@ -66,10 +73,14 @@ class RecipeDetailPage extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: ingredients.map((ingredient) {
-                return Text(
-                  '- $ingredient',
-                  style: TextStyle(
-                    color: Colors.black, // Match your color
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Text(
+                    '- $ingredient',
+                    style: TextStyle(
+                      fontSize: 16.0, // Teks lebih besar
+                      color: Colors.black, // Sesuaikan warna Anda
+                    ),
                   ),
                 );
               }).toList(),
@@ -77,12 +88,17 @@ class RecipeDetailPage extends StatelessWidget {
             SizedBox(height: 16.0),
 
             // Langkah-langkah
-            Text(
-              'Langkah-Langkah:',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.black, // Match your color
+            Container(
+              padding: EdgeInsets.all(8.0),
+              color: Colors
+                  .grey[300], // Warna latar belakang untuk langkah-langkah
+              child: Text(
+                'Langkah-Langkah:',
+                style: TextStyle(
+                  fontSize: 20.0, // Teks lebih besar
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black, // Sesuaikan warna Anda
+                ),
               ),
             ),
             SizedBox(height: 8.0),
@@ -93,16 +109,33 @@ class RecipeDetailPage extends StatelessWidget {
               children: steps.asMap().entries.map((entry) {
                 int index = entry.key + 1;
                 String step = entry.value;
-                return Text(
-                  '$index. $step',
-                  style: TextStyle(
-                    color: Colors.black, // Match your color
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Text(
+                    '$index. $step',
+                    style: TextStyle(
+                      fontSize: 16.0, // Teks lebih besar
+                      color: Colors.black, // Sesuaikan warna Anda
+                    ),
                   ),
                 );
               }).toList(),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //TODO: fungsi
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Resep ditambahkan ke favorit!'),
+            ),
+          );
+        },
+        backgroundColor:
+            Colors.orange, // Sesuaikan dengan warna yang diinginkan
+        child: Icon(Icons.favorite),
       ),
     );
   }
