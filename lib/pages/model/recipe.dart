@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Food {
   final String foodName;
   final double rating;
@@ -5,6 +7,7 @@ class Food {
   final String imageUrl;
   final List<String> ingredients;
   final List<String> steps;
+  final DocumentReference documentReference;
 
   Food({
     required this.foodName,
@@ -13,9 +16,11 @@ class Food {
     required this.imageUrl,
     required this.ingredients,
     required this.steps,
+    required this.documentReference,
   });
 
-  factory Food.fromMap(Map<String, dynamic> map) {
+  factory Food.fromMap(
+      Map<String, dynamic> map, DocumentReference documentReference) {
     return Food(
       foodName: map['foodname'] ?? '',
       rating: map['rating'] ?? 0.0,
@@ -25,6 +30,7 @@ class Food {
           ? List<String>.from(map['ingredients'])
           : [],
       steps: map['steps'] != null ? List<String>.from(map['steps']) : [],
+      documentReference: documentReference,
     );
   }
 }

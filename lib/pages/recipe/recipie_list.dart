@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:testflutter_application_1/pages/model/recipe.dart';
+import 'package:testflutter_application_1/pages/recipe/add_recipie.dart';
 import 'package:testflutter_application_1/pages/recipe/recipie_Detail.dart'; // Sesuaikan dengan path Anda
 
 class RecipieList extends StatelessWidget {
@@ -29,7 +30,8 @@ class RecipieList extends StatelessWidget {
 
           // Convert QueryDocumentSnapshot to List<Food>
           List<Food> foods = documents.map((doc) {
-            return Food.fromMap(doc.data() as Map<String, dynamic>);
+            return Food.fromMap(
+                doc.data() as Map<String, dynamic>, doc.reference);
           }).toList();
 
           return ListView.builder(
@@ -47,6 +49,7 @@ class RecipieList extends StatelessWidget {
                         imageUrl: food.imageUrl,
                         ingredients: food.ingredients,
                         steps: food.steps,
+                        documentReference: food.documentReference,
                       ),
                     ),
                   );
@@ -100,6 +103,15 @@ class RecipieList extends StatelessWidget {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AddRecipePage()));
+        },
+        backgroundColor:
+            Colors.orange, // Sesuaikan dengan warna yang diinginkan
+        child: Icon(Icons.add),
       ),
     );
   }

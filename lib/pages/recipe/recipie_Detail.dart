@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class RecipeDetailPage extends StatelessWidget {
@@ -6,8 +7,10 @@ class RecipeDetailPage extends StatelessWidget {
   final String imageUrl;
   final List<String> ingredients;
   final List<String> steps;
+  final DocumentReference documentReference;
 
   RecipeDetailPage({
+    required this.documentReference,
     required this.recipeName,
     required this.cookTime,
     required this.ingredients,
@@ -39,7 +42,7 @@ class RecipeDetailPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // Sesuaikan warna Anda
+                color: Colors.black,
               ),
             ),
             SizedBox(height: 8.0),
@@ -57,13 +60,13 @@ class RecipeDetailPage extends StatelessWidget {
             // Bahan-Bahan
             Container(
               padding: EdgeInsets.all(8.0),
-              color: Colors.grey[300], // Warna latar belakang untuk bahan
+              color: Colors.grey[300],
               child: Text(
                 'Bahan-Bahan:',
                 style: TextStyle(
-                  fontSize: 20.0, // Teks lebih besar
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Sesuaikan warna Anda
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -78,8 +81,8 @@ class RecipeDetailPage extends StatelessWidget {
                   child: Text(
                     '- $ingredient',
                     style: TextStyle(
-                      fontSize: 16.0, // Teks lebih besar
-                      color: Colors.black, // Sesuaikan warna Anda
+                      fontSize: 16.0,
+                      color: Colors.black,
                     ),
                   ),
                 );
@@ -90,14 +93,13 @@ class RecipeDetailPage extends StatelessWidget {
             // Langkah-langkah
             Container(
               padding: EdgeInsets.all(8.0),
-              color: Colors
-                  .grey[300], // Warna latar belakang untuk langkah-langkah
+              color: Colors.grey[300],
               child: Text(
                 'Langkah-Langkah:',
                 style: TextStyle(
-                  fontSize: 20.0, // Teks lebih besar
+                  fontSize: 20.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black, // Sesuaikan warna Anda
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -114,8 +116,8 @@ class RecipeDetailPage extends StatelessWidget {
                   child: Text(
                     '$index. $step',
                     style: TextStyle(
-                      fontSize: 16.0, // Teks lebih besar
-                      color: Colors.black, // Sesuaikan warna Anda
+                      fontSize: 16.0,
+                      color: Colors.black,
                     ),
                   ),
                 );
@@ -126,17 +128,49 @@ class RecipeDetailPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //TODO: fungsi
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Resep ditambahkan ke favorit!'),
-            ),
-          );
+          _deleteRecipe(context);
         },
-        backgroundColor:
-            Colors.orange, // Sesuaikan dengan warna yang diinginkan
-        child: Icon(Icons.favorite),
+        backgroundColor: Colors.red, // Sesuaikan dengan warna yang diinginkan
+        child: Icon(Icons.delete),
       ),
+    );
+  }
+
+  void _deleteRecipe(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Konfirmasi Penghapusan'),
+          content: Text('Apakah Anda yakin ingin menghapus resep ini?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Hapus resep menggunakan DocumentReference
+                documentReference.delete().then((value) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Resep dihapus!'),
+                    ),
+                  );
+                  // Setelah penghapusan, Anda mungkin ingin kembali ke layar sebelumnya.
+                  Navigator.of(context).pop();
+                }).catchError((error) {
+                  print('Error deleting recipe: $error');
+                });
+              },
+              child: Text('Hapus'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

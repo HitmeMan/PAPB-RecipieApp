@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "578568155957",
+    "firebase_url": "https://project-flutter-api-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "project-flutter-api",
     "storage_bucket": "project-flutter-api.appspot.com"
   },
@@ -10,6 +11,25 @@
         "mobilesdk_app_id": "1:578568155957:android:42880f33af4c62f646127c",
         "android_client_info": {
           "package_name": "com.example.testflutter_application_1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB3xbqt880XpvvUVp4XdSYZAOZckiDkmI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578568155957:android:1fecddee46bd9bf146127c",
+        "android_client_info": {
+          "package_name": "com.reciapp.application_1"
         }
       },
       "oauth_client": [],

@@ -107,6 +107,7 @@ class HomePage extends StatelessWidget {
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('foodlist')
+                      .limit(3)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
@@ -121,7 +122,8 @@ class HomePage extends StatelessWidget {
 
                     // Convert QueryDocumentSnapshot to List<Food>
                     List<Food> foods = documents.map((doc) {
-                      return Food.fromMap(doc.data() as Map<String, dynamic>);
+                      return Food.fromMap(
+                          doc.data() as Map<String, dynamic>, doc.reference);
                     }).toList();
 
                     return ListView.builder(
@@ -139,6 +141,7 @@ class HomePage extends StatelessWidget {
                                 imageUrl: food.imageUrl,
                                 ingredients: food.ingredients,
                                 steps: food.steps,
+                                documentReference: food.documentReference,
                               ),
                             ));
                           },
@@ -195,92 +198,6 @@ class HomePage extends StatelessWidget {
           ),
           SizedBox(height: 15),
           // TODO: isilist favorite disini
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(),
-                child: Text(
-                  'Favorite Recipes',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              SizedBox(height: 15),
-              SizedBox(
-                height: 150,
-                child: StreamBuilder<QuerySnapshot>(
-                  // Ganti collection dan query sesuai dengan kebutuhan Anda
-                  stream: FirebaseFirestore.instance
-                      .collection('foodlist')
-                      .where('isFavorite', isEqualTo: true)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
-
-                    List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
-
-                    // Convert QueryDocumentSnapshot to List<Food>
-                    List<Food> favoriteFoods = documents.map((doc) {
-                      return Food.fromMap(doc.data() as Map<String, dynamic>);
-                    }).toList();
-
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: favoriteFoods.length,
-                      itemBuilder: (context, index) {
-                        var favoriteFood = favoriteFoods[index];
-
-                        return InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => RecipeDetailPage(
-                                recipeName: favoriteFood.foodName,
-                                cookTime: favoriteFood.time.toString(),
-                                imageUrl: favoriteFood.imageUrl,
-                                ingredients: favoriteFood.ingredients,
-                                steps: favoriteFood.steps,
-                              ),
-                            ));
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              image: DecorationImage(
-                                image: NetworkImage(favoriteFood.imageUrl),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child: Center(
-                              child: Container(
-                                color: Colors.black.withOpacity(0.5),
-                                padding: EdgeInsets.all(10),
-                                child: Text(
-                                  favoriteFood.foodName,
-                                  style: TextStyle(
-                                      fontSize: 25, color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          )
         ]));
   }
 
